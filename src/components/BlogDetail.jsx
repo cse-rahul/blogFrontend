@@ -87,26 +87,19 @@ function BlogDetail() {
   const bannerImageUrl = getBannerImageUrl();
 
   // ✅ Handle Delete Blog
-const handleDelete = async () => {
-  if (window.confirm('Are you sure you want to delete this blog?')) {
-    try {
-      console.log('🗑️ Delete initiated');
-      console.log('Blog ID:', id);
-      console.log('Token:', getToken() ? 'Present' : 'Missing');
-      
-      await deleteBlog(id);
-      showSuccess('Blog deleted!');
-      setTimeout(() => navigate('/blogs'), 1500);
-    } catch (error) {
-      console.error('❌ Full error:', error);
-      console.error('Response:', error.response);
-      console.error('Status:', error.response?.status);
-      console.error('Data:', error.response?.data);
-      showError('Failed to delete');
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this blog? This action cannot be undone.')) {
+      try {
+        console.log('🗑️ Deleting blog:', id);
+        await deleteBlog(id);
+        showSuccess('Blog deleted successfully');
+        setTimeout(() => navigate('/blogs'), 1500);
+      } catch (error) {
+        console.error('❌ Delete error:', error);
+        showError('Failed to delete blog');
+      }
     }
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -141,18 +134,18 @@ const handleDelete = async () => {
       </nav>
 
       <article className="max-w-4xl mx-auto px-4 py-12">
-        {/* ✅ Full-width Banner Image */}
+        {/* ✅ FIXED: Full-width Banner Image with object-contain */}
         {bannerImageUrl && (
-          <div className="mb-8 rounded-xl overflow-hidden shadow-lg bg-gray-200">
+          <div className="mb-8 rounded-xl overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center" style={{ height: '400px' }}>
             <img
               src={bannerImageUrl}
               alt={blog.bannerAlt || blog.heading}
-              className="w-full h-96 object-cover hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 console.error('❌ Image failed to load:', bannerImageUrl);
                 e.target.style.display = 'none';
                 const errorDiv = document.createElement('div');
-                errorDiv.className = 'w-full h-96 bg-gray-300 flex items-center justify-center text-gray-600 text-center p-4';
+                errorDiv.className = 'w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 text-center p-4';
                 errorDiv.innerHTML = `
                   <div>
                     <p style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">📷 Image not available</p>
@@ -175,7 +168,7 @@ const handleDelete = async () => {
           <div className="flex flex-wrap items-center gap-4 text-gray-600 text-sm border-b border-gray-200 pb-4">
             <span>📅 {new Date(blog.createdAt).toLocaleDateString('en-IN')}</span>
             <span>⏱️ {blog.readingTime || 5} min read</span>
-            <span>📝 {blog.content ? Math.ceil(blog.content.replace(/<[^>]*>/g, '').split(/\s+/).filter(w => w).length) : 0} words</span>
+            <span>📝 {blog.content ? Math.ceil(blog.content.replace(/<[^>]*>/g, '').split(/\s+/).filter(w => w.length > 0).length) : 0} words</span>
           </div>
         </div>
 
@@ -250,6 +243,24 @@ const handleDelete = async () => {
           font-size: 20px;
           font-weight: bold;
           margin: 20px 0 12px;
+          color: #4b5563;
+        }
+        .blog-content h4 {
+          font-size: 18px;
+          font-weight: bold;
+          margin: 15px 0 10px;
+          color: #4b5563;
+        }
+        .blog-content h5 {
+          font-size: 16px;
+          font-weight: bold;
+          margin: 12px 0 8px;
+          color: #4b5563;
+        }
+        .blog-content h6 {
+          font-size: 14px;
+          font-weight: bold;
+          margin: 10px 0 6px;
           color: #4b5563;
         }
         .blog-content p {

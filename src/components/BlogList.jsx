@@ -155,12 +155,12 @@ function BlogList() {
                 onClick={() => handleBlogClick(blog._id)}
                 className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
               >
-                {/* Image Container */}
-                <div className="h-56 overflow-hidden bg-gray-200">
+                {/* ✅ FIXED: Image Container with object-contain */}
+                <div className="h-56 overflow-hidden bg-gray-200 flex items-center justify-center">
                   <img
                     src={getBannerImageUrl(blog.bannerImage)}
                     alt={blog.heading}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       console.error('❌ Image failed:', getBannerImageUrl(blog.bannerImage));
                       e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';

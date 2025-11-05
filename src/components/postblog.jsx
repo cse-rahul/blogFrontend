@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Heading from '@tiptap/extension-heading';
@@ -21,13 +21,17 @@ function PostBlog() {
   const { showSuccess, showError, showWarning } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const loadedRef = useRef(false);
 
-  // ✅ TipTap Editor Setup
+  // ✅ FIXED: TipTap Editor Setup with all heading levels
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: false, // ✅ Disable default heading
+      }),
+      // ✅ Manually add Heading with ALL levels
       Heading.configure({
-        levels: [1, 2, 3, 4, 5, 6],
+        levels: [1, 2, 3, 4, 5, 6], // ✅ All levels enabled
       }),
     ],
     content: '',
@@ -44,8 +48,9 @@ function PostBlog() {
   // ✅ Load blog data if editing
   useEffect(() => {
     const blogId = searchParams.get('edit');
-    if (blogId && editor) {
+    if (blogId && editor && !loadedRef.current) {
       console.log('🔍 Edit mode detected:', blogId);
+      loadedRef.current = true;
       loadBlogForEdit(blogId);
     }
   }, [searchParams, editor]);
@@ -494,9 +499,10 @@ function PostBlog() {
                         <button
                           key={level}
                           type="button"
-                          onClick={() =>
-                            editor.chain().focus().toggleHeading({ level }).run()
-                          }
+                          onClick={() => {
+                            console.log('🎯 Setting H' + level);
+                            editor.chain().focus().toggleHeading({ level }).run();
+                          }}
                           className={`px-3 py-1 rounded font-semibold text-sm transition-all ${
                             editor.isActive('heading', { level })
                               ? 'bg-blue-600 text-white'
@@ -651,50 +657,69 @@ function PostBlog() {
         </div>
       </div>
 
-      {/* TipTap Styles */}
-      <style jsx>{`
-        .tiptap-editor {
-          padding: 16px 24px;
-          min-height: 400px;
-          font-size: 16px;
-          line-height: 1.6;
-        }
-        .tiptap-editor h1 {
-          font-size: 32px;
-          font-weight: bold;
-          margin: 20px 0 10px;
-          color: #1f2937;
-        }
-        .tiptap-editor h2 {
-          font-size: 24px;
-          font-weight: bold;
-          margin: 15px 0 8px;
-          color: #374151;
-        }
-        .tiptap-editor h3 {
-          font-size: 20px;
-          font-weight: bold;
-          margin: 12px 0 6px;
-          color: #4b5563;
-        }
-        .tiptap-editor p {
-          margin: 10px 0;
-        }
-        .tiptap-editor strong {
-          font-weight: bold;
-        }
-        .tiptap-editor em {
-          font-style: italic;
-        }
-        .tiptap-editor ul,
-        .tiptap-editor ol {
-          margin-left: 20px;
-          margin: 10px 0;
-        }
-        .tiptap-editor li {
-          margin: 5px 0;
-        }
-      `}</style>
+    {/* TipTap Styles */}
+<style jsx>{`
+  .tiptap-editor {
+    padding: 16px 24px;
+    min-height: 400px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .tiptap-editor h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    color: #1f2937; /* Dark gray */
+  }
+  .tiptap-editor h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 15px 0 8px;
+    color: #374151; /* Dark gray */
+  }
+  .tiptap-editor h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 12px 0 6px;
+    color: #1f2937; 
+  }
+  .tiptap-editor h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #1f2937;
+  }
+  .tiptap-editor h5 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0 4px;
+    color: #1f2937;
+  }
+  .tiptap-editor h6 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 6px 0 3px;
+    color: #1f2937; 
+  }
+  .tiptap-editor p {
+    margin: 10px 0;
+  }
+  .tiptap-editor strong {
+    font-weight: bold;
+  }
+  .tiptap-editor em {
+    font-style: italic;
+  }
+  .tiptap-editor ul,
+  .tiptap-editor ol {
+    margin-left: 20px;
+    margin: 10px 0;
+  }
+  .tiptap-editor li {
+    margin: 5px 0;
+  }
+`}</style>
+
     </div>
   );
 }
