@@ -4,7 +4,7 @@ import { getToken } from "../utils/authtoken";
 // ✅ HARDCODED Catalyst Backend URL
 const BASE_URL = "https://backend-60056722056.development.catalystserverless.in/server/backend_function/api/blogs";
 
-console.log('📍 Blog API URL:', BASE_URL);
+// console.log('📍 Blog API URL:', BASE_URL);
 
 export const getAllBlogs = async () => {
   try {
