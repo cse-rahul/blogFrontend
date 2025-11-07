@@ -2,7 +2,12 @@ import axios from "axios";
 import { getToken } from "../utils/authtoken";
 
 // ✅ Dynamic BASE_URL for Catalyst
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:9000/api/blogs";
+// Since VITE_API_URL already has /api, add /blogs to it
+const BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/blogs`
+  : "http://localhost:9000/api/blogs";
+
+console.log('📍 Blog API URL:', BASE_URL);
 
 // ✅ Upload new blog post with image using FormData
 export const uploadPost = (formData) => {
@@ -46,7 +51,7 @@ export const getAllBlogs = async () => {
     console.log('📚 Fetching all blogs from:', BASE_URL);
     
     const response = await axios.get(BASE_URL, {
-      timeout: 10000, // 10 second timeout
+      timeout: 10000,
     });
     
     console.log('✅ Blogs fetched successfully:', response.data.length, 'blogs');
@@ -69,7 +74,7 @@ export const getBlogById = async (id) => {
     console.log('🔍 Fetching blog from:', url);
     
     const response = await axios.get(url, {
-      timeout: 10000, // 10 second timeout
+      timeout: 10000,
     });
     
     console.log('✅ Blog fetched successfully:', response.data._id);
@@ -84,20 +89,19 @@ export const getBlogById = async (id) => {
     console.error('⚠️ Response status:', error.response?.status);
     console.error('⚠️ Response data:', error.response?.data);
     
-    // More helpful error messages
     if (error.response?.status === 404) {
       console.error('❌ Blog not found with ID:', id);
     } else if (error.response?.status === 500) {
       console.error('❌ Server error - check backend logs');
     } else if (error.code === 'ECONNREFUSED') {
-      console.error('❌ Cannot connect to backend - make sure it\'s running on port 9000');
+      console.error('❌ Cannot connect to backend - make sure it\'s running');
     }
     
     throw error;
   }
 };
 
-// ✅ NEW: Update blog post
+// ✅ Update blog post
 export const updateBlog = (id, formData) => {
   try {
     console.log('✏️ Updating blog:', id);
@@ -120,7 +124,7 @@ export const updateBlog = (id, formData) => {
   }
 };
 
-// ✅ NEW: Delete blog post
+// ✅ Delete blog post
 export const deleteBlog = (id) => {
   try {
     console.log('🗑️ Deleting blog:', id);
@@ -142,7 +146,7 @@ export const deleteBlog = (id) => {
   }
 };
 
-// ✅ NEW: Health check - verify backend is running
+// ✅ Health check - verify backend is running
 export const healthCheck = async () => {
   try {
     console.log('🏥 Checking backend health...');
@@ -153,7 +157,6 @@ export const healthCheck = async () => {
     return true;
   } catch (error) {
     console.error('❌ Backend is not responding');
-    console.error('   Make sure backend is running on port 9000');
     return false;
   }
 };
