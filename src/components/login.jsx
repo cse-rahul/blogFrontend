@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useToast } from '../context/ToastContext';
 import { setToken } from '../utils/authtoken';
+import { login } from '../api/auth'; // ✅ Use auth.js function
 
 function LoginForm() {
-  const [email, setEmail] = useState(''); // ✅ Changed from username
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,10 +14,10 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('🔐 Login attempt with:', { email, password: '***' }); // ✅ Changed
+    console.log('🔐 Login attempt with:', { email, password: '***' });
 
     if (!email || !password) {
-      console.log('❌ Missing email or password'); // ✅ Changed
+      console.log('❌ Missing email or password');
       showError('Please fill all fields');
       return;
     }
@@ -26,10 +26,7 @@ function LoginForm() {
 
     try {
       console.log('📤 Sending login request to backend...');
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
-        email, // ✅ Changed from username
-        password,
-      });
+      const response = await login({ email, password }); // ✅ Use auth.js
 
       console.log('✅ Login response:', response.data);
 

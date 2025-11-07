@@ -3,6 +3,7 @@ import { getAllBlogs } from '../api/blog';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { getToken } from '../utils/authtoken';
+import { API_CONFIG } from '../config/api'; // ✅ Add this import
 
 function BlogList() {
   const [blogs, setBlogs] = useState([]);
@@ -59,24 +60,12 @@ function BlogList() {
     return text.length > 150 ? text.substring(0, 150) + '...' : text;
   };
 
-  // ✅ FIX: Generate correct image URL
+  // ✅ FIX: Generate correct image URL using API_CONFIG
   const getBannerImageUrl = (bannerImage) => {
     if (!bannerImage) return 'https://via.placeholder.com/400x300?text=No+Image';
     
-    // If already a full URL
-    if (bannerImage.startsWith('http')) {
-      return bannerImage;
-    }
-    
-    // Convert backslashes to forward slashes
-    let imagePath = bannerImage.replace(/\\/g, '/');
-    
-    // Ensure it starts with /
-    if (!imagePath.startsWith('/')) {
-      imagePath = '/' + imagePath;
-    }
-    
-    return `http://localhost:5000${imagePath}`;
+    // Use API_CONFIG to get full URL
+    return API_CONFIG.getImageUrl(bannerImage);  // ✅ FIXED
   };
 
   if (loading) {

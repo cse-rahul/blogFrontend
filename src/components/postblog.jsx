@@ -6,6 +6,7 @@ import { uploadPost, getBlogById, updateBlog } from '../api/blog';
 import { useToast } from '../context/ToastContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { removeToken } from '../utils/authtoken';
+import { API_CONFIG } from '../config/api'; // ✅ Add this import
 
 function PostBlog() {
   const [heading, setHeading] = useState('');
@@ -83,13 +84,9 @@ function PostBlog() {
         }
       }, 500);
 
-      // ✅ Fix image URL - Add leading / after 5000
+      // ✅ Fix image URL - Use API_CONFIG instead of localhost
       if (data.bannerImage) {
-        let imgPath = data.bannerImage.replace(/\\/g, '/');
-        if (!imgPath.startsWith('/')) {
-          imgPath = '/' + imgPath;
-        }
-        const fullUrl = `http://localhost:5000${imgPath}`;
+        const fullUrl = API_CONFIG.getImageUrl(data.bannerImage);  // ✅ FIXED
         console.log('✅ Full image URL:', fullUrl);
         setImagePreview(fullUrl);
       }
@@ -657,69 +654,68 @@ function PostBlog() {
         </div>
       </div>
 
-    {/* TipTap Styles */}
-<style jsx>{`
-  .tiptap-editor {
-    padding: 16px 24px;
-    min-height: 400px;
-    font-size: 16px;
-    line-height: 1.6;
-  }
-  .tiptap-editor h1 {
-    font-size: 32px;
-    font-weight: bold;
-    margin: 20px 0 10px;
-    color: #1f2937; /* Dark gray */
-  }
-  .tiptap-editor h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 15px 0 8px;
-    color: #374151; /* Dark gray */
-  }
-  .tiptap-editor h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 12px 0 6px;
-    color: #1f2937; 
-  }
-  .tiptap-editor h4 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0 5px;
-    color: #1f2937;
-  }
-  .tiptap-editor h5 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 8px 0 4px;
-    color: #1f2937;
-  }
-  .tiptap-editor h6 {
-    font-size: 14px;
-    font-weight: bold;
-    margin: 6px 0 3px;
-    color: #1f2937; 
-  }
-  .tiptap-editor p {
-    margin: 10px 0;
-  }
-  .tiptap-editor strong {
-    font-weight: bold;
-  }
-  .tiptap-editor em {
-    font-style: italic;
-  }
-  .tiptap-editor ul,
-  .tiptap-editor ol {
-    margin-left: 20px;
-    margin: 10px 0;
-  }
-  .tiptap-editor li {
-    margin: 5px 0;
-  }
-`}</style>
-
+      {/* TipTap Styles */}
+      <style jsx>{`
+        .tiptap-editor {
+          padding: 16px 24px;
+          min-height: 400px;
+          font-size: 16px;
+          line-height: 1.6;
+        }
+        .tiptap-editor h1 {
+          font-size: 32px;
+          font-weight: bold;
+          margin: 20px 0 10px;
+          color: #1f2937;
+        }
+        .tiptap-editor h2 {
+          font-size: 24px;
+          font-weight: bold;
+          margin: 15px 0 8px;
+          color: #374151;
+        }
+        .tiptap-editor h3 {
+          font-size: 20px;
+          font-weight: bold;
+          margin: 12px 0 6px;
+          color: #1f2937;
+        }
+        .tiptap-editor h4 {
+          font-size: 18px;
+          font-weight: bold;
+          margin: 10px 0 5px;
+          color: #1f2937;
+        }
+        .tiptap-editor h5 {
+          font-size: 16px;
+          font-weight: bold;
+          margin: 8px 0 4px;
+          color: #1f2937;
+        }
+        .tiptap-editor h6 {
+          font-size: 14px;
+          font-weight: bold;
+          margin: 6px 0 3px;
+          color: #1f2937;
+        }
+        .tiptap-editor p {
+          margin: 10px 0;
+        }
+        .tiptap-editor strong {
+          font-weight: bold;
+        }
+        .tiptap-editor em {
+          font-style: italic;
+        }
+        .tiptap-editor ul,
+        .tiptap-editor ol {
+          margin-left: 20px;
+          margin: 10px 0;
+        }
+        .tiptap-editor li {
+          margin: 5px 0;
+        }
+      `}</style>
     </div>
   );
 }
