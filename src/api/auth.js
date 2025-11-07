@@ -14,5 +14,5 @@ export const signup = ({ email, password }) => {
   console.log('📝 Signup attempt:', email);
   console.log('📍 Using AUTH_URL:', API_CONFIG.AUTH_URL);
   
-  return axios.post(`${API_CONFIG.AUTH_URL}/register`, { email, password });
+  return axios.post(`${API_CONFIG.AUTH_URL}/signup`, { email, password });
 };

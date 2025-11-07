@@ -1,14 +1,8 @@
-// ✅ Dynamic API configuration from Catalyst Slate environment variables
-// These variables are set in Catalyst Slate Console (not in .env file)
-
+// ✅ Use Catalyst's built-in serverless routing (no CORS issues)
 export const API_CONFIG = {
-  // Backend base URL (for uploads, images)
-  // Set in Catalyst Slate Console as: VITE_BACKEND_HOST
-  BACKEND_HOST: import.meta.env.VITE_BACKEND_HOST || "http://localhost:9000",
-  
-  // API base URL (for API calls)
-  // Set in Catalyst Slate Console as: VITE_API_URL
-  API_BASE: import.meta.env.VITE_API_URL || "http://localhost:9000/api",
+  // For Slate frontend - use /api direct path (Catalyst proxies it)
+  BACKEND_HOST: window.location.origin,  // Same origin
+  API_BASE: '/api',  // Relative path - Catalyst will proxy to backend_function
   
   // Derived URLs
   get AUTH_URL() {
@@ -27,11 +21,12 @@ export const API_CONFIG = {
     let path = imagePath.replace(/\\/g, '/');
     if (!path.startsWith('/')) path = '/' + path;
     
-    return `${this.BACKEND_HOST}${path}`;
+    // Use relative path for images too
+    return `/api/uploads${path}`;
   }
 };
 
-console.log('📍 API Config (from Catalyst Slate Console):', {
+console.log('📍 API Config (Catalyst Proxy):', {
   BACKEND_HOST: API_CONFIG.BACKEND_HOST,
   API_BASE: API_CONFIG.API_BASE,
   AUTH_URL: API_CONFIG.AUTH_URL,
