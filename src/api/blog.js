@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getToken } from "../utils/authtoken";
 
-const BASE_URL = "http://localhost:5000/api/blogs";
+// ✅ Dynamic BASE_URL for Catalyst
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:9000/api/blogs";
 
 // ✅ Upload new blog post with image using FormData
 export const uploadPost = (formData) => {
@@ -89,7 +90,7 @@ export const getBlogById = async (id) => {
     } else if (error.response?.status === 500) {
       console.error('❌ Server error - check backend logs');
     } else if (error.code === 'ECONNREFUSED') {
-      console.error('❌ Cannot connect to backend - make sure it\'s running on port 5000');
+      console.error('❌ Cannot connect to backend - make sure it\'s running on port 9000');
     }
     
     throw error;
@@ -145,14 +146,14 @@ export const deleteBlog = (id) => {
 export const healthCheck = async () => {
   try {
     console.log('🏥 Checking backend health...');
-    const response = await axios.get('http://localhost:5000/api/blogs', {
+    const response = await axios.get(BASE_URL, {
       timeout: 5000,
     });
     console.log('✅ Backend is running');
     return true;
   } catch (error) {
     console.error('❌ Backend is not responding');
-    console.error('   Make sure backend is running on http://localhost:5000');
+    console.error('   Make sure backend is running on port 9000');
     return false;
   }
 };
