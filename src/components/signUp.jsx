@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import { setToken } from "../utils/authtoken";
+import { signup } from "../api/auth"; // ✅ Use auth.js function
 
 const SignupForm = () => {
   const [form, setForm] = useState({
-    email: "", // ✅ Changed from username
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -20,7 +20,7 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('📝 Signup attempt with:', { email: form.email, password: '***' }); // ✅ Changed
+    console.log('📝 Signup attempt with:', { email: form.email, password: '***' });
 
     if (!form.email || !form.password || !form.confirmPassword) {
       console.log('❌ Missing fields');
@@ -44,10 +44,10 @@ const SignupForm = () => {
 
     try {
       console.log('📤 Sending signup request to backend...');
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
-        email: form.email, // ✅ Changed from username
+      const res = await signup({
+        email: form.email,
         password: form.password,
-      });
+      }); // ✅ Use auth.js
 
       console.log('✅ Signup response:', res.data);
       showSuccess("Account created successfully! 🎉");

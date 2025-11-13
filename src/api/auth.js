@@ -1,11 +1,18 @@
 import axios from "axios";
+import { API_CONFIG } from "../config/api";
 
-const BASE_URL = "http://localhost:5000/api/auth";
+console.log('🔐 Auth module loaded with URL:', API_CONFIG.AUTH_URL);
 
-// Login function
-export const login = ({ email, password }) =>
-  axios.post(`${BASE_URL}/login`, { email, password });
+export const login = ({ email, password }) => {
+  console.log('🔐 Login attempt:', email);
+  console.log('📍 Using AUTH_URL:', API_CONFIG.AUTH_URL);
+  
+  return axios.post(`${API_CONFIG.AUTH_URL}/login`, { email, password });
+};
 
-// Signup function
-export const signup = ({ email, password }) =>
-  axios.post(`${BASE_URL}/register`, { email, password });
+export const signup = ({ email, password }) => {
+  console.log('📝 Signup attempt:', email);
+  console.log('📍 Using AUTH_URL:', API_CONFIG.AUTH_URL);
+  
+  return axios.post(`${API_CONFIG.AUTH_URL}/signup`, { email, password });
+};
